@@ -1,0 +1,159 @@
+Using device: cpu
+Training with: image_size=320, batch_size=2, epochs=25
+Evaluation score threshold: 0.1
+Starting training for 25 epochs...
+Early stopping patience: 5 epochs
+
+Epoch 1: loss=0.042
+Loss breakdown: {'loss_classifier': 0.5210129812359809, 'loss_box_reg': 0.5701425787061453, 'loss_mask': 0.6059073224663735, 'loss_objectness': 0.30632729101926087, 'loss_rpn_box_reg': 0.14143285090103747}
+Epoch 1: IoU=0.450, AP50=0.106, AP@[.50:.95]=0.031, AP75=0.009
+Current learning rate: 0.000996
+New best model saved: AP50 = 0.106
+
+Epoch 2: loss=0.033
+Loss breakdown: {'loss_classifier': 0.33353860639035704, 'loss_box_reg': 0.5776403747498989, 'loss_mask': 0.3903469853103161, 'loss_objectness': 0.14572538956999778, 'loss_rpn_box_reg': 0.11594132613390684}
+Epoch 2: IoU=0.497, AP50=0.095, AP@[.50:.95]=0.032, AP75=0.016
+Current learning rate: 0.000984
+No improvement for 1 epochs
+
+Epoch 3: loss=0.027
+Loss breakdown: {'loss_classifier': 0.2989938486367464, 'loss_box_reg': 0.5145951598882675, 'loss_mask': 0.3876107484102249, 'loss_objectness': 0.13957903832197188, 'loss_rpn_box_reg': 0.11120300125330687}
+Epoch 3: IoU=0.581, AP50=0.415, AP@[.50:.95]=0.194, AP75=0.175
+Current learning rate: 0.000965
+New best model saved: AP50 = 0.415
+
+Epoch 4: loss=0.020
+Loss breakdown: {'loss_classifier': 0.28741635866463183, 'loss_box_reg': 0.47208540216088296, 'loss_mask': 0.3550302229821682, 'loss_objectness': 0.11646616533398628, 'loss_rpn_box_reg': 0.10061513725668192}
+Epoch 4: IoU=0.580, AP50=0.477, AP@[.50:.95]=0.235, AP75=0.193
+Current learning rate: 0.000938
+New best model saved: AP50 = 0.477
+
+Epoch 5: loss=0.042
+Loss breakdown: {'loss_classifier': 0.2583921026438475, 'loss_box_reg': 0.4284033803269267, 'loss_mask': 0.29776070043444636, 'loss_objectness': 0.07550719105638563, 'loss_rpn_box_reg': 0.08501831681933254}
+Epoch 5: IoU=0.609, AP50=0.504, AP@[.50:.95]=0.258, AP75=0.243
+Current learning rate: 0.000905
+New best model saved: AP50 = 0.504
+
+Epoch 6: loss=0.031
+Loss breakdown: {'loss_classifier': 0.24560960326343775, 'loss_box_reg': 0.38842653930187226, 'loss_mask': 0.28444472923874853, 'loss_objectness': 0.06604264015331865, 'loss_rpn_box_reg': 0.07670259245933267}
+Epoch 6: IoU=0.610, AP50=0.483, AP@[.50:.95]=0.274, AP75=0.285
+Current learning rate: 0.000865
+No improvement for 1 epochs
+
+Epoch 7: loss=0.032
+Loss breakdown: {'loss_classifier': 0.21741194650530815, 'loss_box_reg': 0.3602044265717268, 'loss_mask': 0.31271679438650607, 'loss_objectness': 0.0553980449680239, 'loss_rpn_box_reg': 0.07103051256854087}
+Epoch 7: IoU=0.577, AP50=0.495, AP@[.50:.95]=0.237, AP75=0.231
+Current learning rate: 0.000819
+No improvement for 2 epochs
+
+Epoch 8: loss=0.026
+Loss breakdown: {'loss_classifier': 0.20194165110588075, 'loss_box_reg': 0.33073523482307793, 'loss_mask': 0.26924068816006186, 'loss_objectness': 0.047483515460044146, 'loss_rpn_box_reg': 0.057842707476811486}
+Epoch 8: IoU=0.587, AP50=0.507, AP@[.50:.95]=0.274, AP75=0.305
+Current learning rate: 0.000768
+New best model saved: AP50 = 0.507
+
+Epoch 9: loss=0.032
+Loss breakdown: {'loss_classifier': 0.1950157880783081, 'loss_box_reg': 0.3281655728816986, 'loss_mask': 0.26536460518836974, 'loss_objectness': 0.03878982325550169, 'loss_rpn_box_reg': 0.05913225763943046}
+Epoch 9: IoU=0.589, AP50=0.472, AP@[.50:.95]=0.261, AP75=0.264
+Current learning rate: 0.000713
+No improvement for 1 epochs
+
+Epoch 10: loss=0.015
+Loss breakdown: {'loss_classifier': 0.1696092439815402, 'loss_box_reg': 0.2893144052475691, 'loss_mask': 0.24057202748954296, 'loss_objectness': 0.03630434037186205, 'loss_rpn_box_reg': 0.05719291167188203}
+Epoch 10: IoU=0.612, AP50=0.490, AP@[.50:.95]=0.250, AP75=0.247
+Current learning rate: 0.000655
+No improvement for 2 epochs
+
+Epoch 11: loss=0.017
+Loss breakdown: {'loss_classifier': 0.1628295624628663, 'loss_box_reg': 0.2698087878525257, 'loss_mask': 0.2248337298631668, 'loss_objectness': 0.035538062680279835, 'loss_rpn_box_reg': 0.054252284951508044}
+Epoch 11: IoU=0.606, AP50=0.546, AP@[.50:.95]=0.299, AP75=0.285
+Current learning rate: 0.000594
+New best model saved: AP50 = 0.546
+
+Epoch 12: loss=0.011
+Loss breakdown: {'loss_classifier': 0.14905947288498284, 'loss_box_reg': 0.25706248339265586, 'loss_mask': 0.2027669008821249, 'loss_objectness': 0.025302728719543664, 'loss_rpn_box_reg': 0.04752781412680633}
+Epoch 12: IoU=0.607, AP50=0.588, AP@[.50:.95]=0.346, AP75=0.367
+Current learning rate: 0.000532
+New best model saved: AP50 = 0.588
+
+Epoch 13: loss=0.010
+Loss breakdown: {'loss_classifier': 0.134373633377254, 'loss_box_reg': 0.2153437715023756, 'loss_mask': 0.1848301874473691, 'loss_objectness': 0.01454156439867802, 'loss_rpn_box_reg': 0.04184650976676494}
+Epoch 13: IoU=0.604, AP50=0.577, AP@[.50:.95]=0.342, AP75=0.363
+Current learning rate: 0.000469
+No improvement for 1 epochs
+
+Epoch 14: loss=0.012
+Loss breakdown: {'loss_classifier': 0.10397260836325586, 'loss_box_reg': 0.18940854724496603, 'loss_mask': 0.17892683614045382, 'loss_objectness': 0.010032712129759602, 'loss_rpn_box_reg': 0.034094796818681064}
+Epoch 14: IoU=0.629, AP50=0.625, AP@[.50:.95]=0.353, AP75=0.359
+Current learning rate: 0.000407
+New best model saved: AP50 = 0.625
+
+Epoch 15: loss=0.019
+Loss breakdown: {'loss_classifier': 0.08303458439186215, 'loss_box_reg': 0.15968293752521276, 'loss_mask': 0.1687119072303176, 'loss_objectness': 0.0067600607930216935, 'loss_rpn_box_reg': 0.024605742801213637}
+Epoch 15: IoU=0.607, AP50=0.609, AP@[.50:.95]=0.380, AP75=0.443
+Current learning rate: 0.000346
+No improvement for 1 epochs
+
+Epoch 16: loss=0.008
+Loss breakdown: {'loss_classifier': 0.07557188826613129, 'loss_box_reg': 0.14410959975793958, 'loss_mask': 0.15471602734178305, 'loss_objectness': 0.0052096566229010936, 'loss_rpn_box_reg': 0.02327325431688223}
+Epoch 16: IoU=0.618, AP50=0.645, AP@[.50:.95]=0.381, AP75=0.420
+Current learning rate: 0.000288
+New best model saved: AP50 = 0.645
+
+Epoch 17: loss=0.012
+Loss breakdown: {'loss_classifier': 0.06972438644152135, 'loss_box_reg': 0.13892981342505664, 'loss_mask': 0.14494681116193533, 'loss_objectness': 0.005222997994860634, 'loss_rpn_box_reg': 0.019977355637820438}
+Epoch 17: IoU=0.617, AP50=0.634, AP@[.50:.95]=0.377, AP75=0.418
+Current learning rate: 0.000233
+No improvement for 1 epochs
+
+Epoch 18: loss=0.007
+Loss breakdown: {'loss_classifier': 0.061688581702765075, 'loss_box_reg': 0.11682917030993849, 'loss_mask': 0.13826116416603326, 'loss_objectness': 0.00408478021126939, 'loss_rpn_box_reg': 0.015306521250749938}
+Epoch 18: IoU=0.605, AP50=0.641, AP@[.50:.95]=0.390, AP75=0.396
+Current learning rate: 0.000182
+No improvement for 2 epochs
+
+Epoch 19: loss=0.008
+Loss breakdown: {'loss_classifier': 0.053107311762869355, 'loss_box_reg': 0.10123106287792324, 'loss_mask': 0.13442584834992885, 'loss_objectness': 0.0035529936947568787, 'loss_rpn_box_reg': 0.012516203511040658}
+Epoch 19: IoU=0.610, AP50=0.608, AP@[.50:.95]=0.377, AP75=0.398
+Current learning rate: 0.000136
+No improvement for 3 epochs
+
+Epoch 20: loss=0.009
+Loss breakdown: {'loss_classifier': 0.049111395189538595, 'loss_box_reg': 0.08866738025099039, 'loss_mask': 0.13136404789984227, 'loss_objectness': 0.0025609341508243235, 'loss_rpn_box_reg': 0.00983998481387971}
+Epoch 20: IoU=0.609, AP50=0.617, AP@[.50:.95]=0.391, AP75=0.423
+Current learning rate: 0.000096
+No improvement for 4 epochs
+
+Epoch 21: loss=0.006
+Loss breakdown: {'loss_classifier': 0.04506387864239514, 'loss_box_reg': 0.08153882399201393, 'loss_mask': 0.12659387178719045, 'loss_objectness': 0.0018001754051510943, 'loss_rpn_box_reg': 0.009564148943172767}
+Epoch 21: IoU=0.628, AP50=0.658, AP@[.50:.95]=0.413, AP75=0.466
+Current learning rate: 0.000063
+New best model saved: AP50 = 0.658
+
+Epoch 22: loss=0.003
+Loss breakdown: {'loss_classifier': 0.04143127307761461, 'loss_box_reg': 0.07294014887884259, 'loss_mask': 0.12218236979097127, 'loss_objectness': 0.002658045486168703, 'loss_rpn_box_reg': 0.007866231560183224}
+Epoch 22: IoU=0.624, AP50=0.642, AP@[.50:.95]=0.417, AP75=0.483
+Current learning rate: 0.000036
+No improvement for 1 epochs
+
+Epoch 23: loss=0.007
+Loss breakdown: {'loss_classifier': 0.04050403648288921, 'loss_box_reg': 0.0670865613501519, 'loss_mask': 0.11888407096266747, 'loss_objectness': 0.0020107273514440747, 'loss_rpn_box_reg': 0.007083974973647855}
+Epoch 23: IoU=0.623, AP50=0.636, AP@[.50:.95]=0.408, AP75=0.456
+Current learning rate: 0.000017
+No improvement for 2 epochs
+
+Epoch 24: loss=0.009
+Loss breakdown: {'loss_classifier': 0.03992420228896663, 'loss_box_reg': 0.06420581659767777, 'loss_mask': 0.11521627558395267, 'loss_objectness': 0.0017118776091592735, 'loss_rpn_box_reg': 0.006602741076494567}
+Epoch 24: IoU=0.606, AP50=0.624, AP@[.50:.95]=0.403, AP75=0.489
+Current learning rate: 0.000005
+No improvement for 3 epochs
+
+Epoch 25: loss=0.003
+Loss breakdown: {'loss_classifier': 0.03959008388919756, 'loss_box_reg': 0.06323274640599266, 'loss_mask': 0.11599463745951652, 'loss_objectness': 0.0018951824167743325, 'loss_rpn_box_reg': 0.006472373944416176}
+Epoch 25: IoU=0.622, AP50=0.669, AP@[.50:.95]=0.422, AP75=0.454
+Current learning rate: 0.000001
+New best model saved: AP50 = 0.669
+
+Training completed!
+Best AP50 achieved: 0.669
+Best model saved to: outputs/maskrcnn_model_best.pt

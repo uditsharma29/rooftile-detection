@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.venv*/
+.env/
+
+# Outputs
+outputs/checkpoints/
+outputs/experiments/
+
+# Model weights (keep the downloaded file)
+weights/
+
+# OS
+.DS_Store
