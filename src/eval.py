@@ -33,6 +33,7 @@ def mask_to_polygons(mask: np.ndarray, mask_threshold: float = 0.5, max_vertices
             
             for eps_pct in epsilon_values:
                 epsilon = max(eps_pct * perimeter, 2.0)
+                #Approximate the polygon with a simpler polygon
                 approx = cv2.approxPolyDP(cnt, epsilon, True).squeeze(1)
                 
                 if approx.ndim == 2 and len(approx) >= 3:
@@ -98,6 +99,7 @@ def _compute_ap(pr_scores, pr_matches, num_gt: int) -> float:
     recall_points = np.linspace(0.0, 1.0, 101)
     prec_at_recall = []
     for r in recall_points:
+        # Find all points on the real P-R curve with recall >= r
         mask = recall >= r
         prec_at_recall.append(float(precision[mask].max()) if mask.any() else 0.0)
     

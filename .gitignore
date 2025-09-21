@@ -14,3 +14,6 @@ weights/
 
 # OS
 .DS_Store
+
+# Ignore the outputs directory
+outputs/

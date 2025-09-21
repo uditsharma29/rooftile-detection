@@ -1,79 +1,165 @@
-## Eyepop.ai Machine Learning Take Home Project: Roof Tile Detection
+# Instance Segmentation for Roof Tile Detection
 
-Welcome to the take-home project for the Machine Learning Engineer position at Eyepop.ai! The instructions may seem intentionally vague — this is to give you room to demonstrate your design thinking and technical creativity. 
+## Overview
+This project implements instance segmentation using Mask R-CNN to detect and segment roof sections from aerial imagery. The model outputs polygons that can be used for roof area analysis and classification.
 
-**This is not a Kaggle competition**: we care more about clarity, correctness, and logical implementation than leaderboard scores, thus having a GPU is not required and won't be a factor in your evaluation.
-
-If you have any questions, feel free to reach out to [blythe@eyepop.ai](mailto:blythe@eyepop.ai).
-
----
-
-### **Goal**
-
-You are provided with top-down satellite images from Google Maps. Your task is to detect each section of a roof that forms a single flat surface. These flat surfaces (or roof tiles) could be used by a solar panel instalation company to determine the surface available for installation and help them generate a quote automatically. The roof tiles should be identified as a polygon with an arbitrary number of vertices representing the endpoints or corners as keypoints. Instead of fitting simple bounding boxes (as that would produce an inaccurate quote), we’d like you to design and train a keypoint detection model that predicts an arbitrary number of keypoints per roof tile, and arbitrary number of roof tiles per image. See example image below.
-
-Each red polygon is a roof tile, and some has 8 vertices, while other have 4.
-
-![sample image showing roof tile with red polygons](sample.png)
-
----
-
-### **Dataset**
-
-Data is stored with the following structure:
-
+## Project Structure
 ```
-/data/
-  images/             # Directory containing 100 images
-  dataset.parquet     # A Parquet file with annotations
+src/
+├── dataset.py      # Dataset loading and preprocessing
+├── model.py        # Mask R-CNN model definition
+├── train.py        # Training script with improvements
+├── eval.py         # Evaluation and inference
+├── postprocessing.py # Post-processing utilities
+└── smoke_tests.py  # Smoke tests for core functionality validation
 ```
 
-The annotations file is a pandas dataframe, where each row is a dictionary form of the pydantic type from Eyepop SDK's  [Asset](https://github.com/eyepop-ai/eyepop-sdk-python/blob/bd69965146984de810d77daea8b10f7ce8839c0e/eyepop/data/data_types.py#L254).
-- `asset_url` is a relative path to images under `/data/images/`.
-- `partition` is split into 80 train, 10 val, and 10 test.
-- `annotations` is a nested dictionary. Note that there are two dimensions you can use to point to the first element.
-```python
-# Per image, should always point to the first annotation, reserved for ground truth
-roofs = row["annotations"][0]["objects"]
-# Per roof, should always point to the first keypoint set. We only support single keypoint set per object.
-keypoints = roof["keyPoints"][0]["points"]
+## Setup
+
+### Environment
+```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
----
+### Pretrained Weights
+Download the COCO pretrained Mask R-CNN weights and save them to the `weights/` folder:
+```bash
+# Create weights directory
+mkdir -p weights
 
-### **Expected Deliverables**
+# Download pretrained weights
+wget https://download.pytorch.org/models/maskrcnn_resnet50_fpn_v2_coco-73cbd019.pth -O weights/maskrcnn_resnet50_fpn_v2_coco-73cbd019.pth
+```
 
-Please include all of the following in this GitHub repository:
+**Note**: The model will automatically load these weights if they exist in the `weights/` folder, otherwise it will start with random initialization.
 
-1. **Training script**
+## Usage
 
-   - A Python script that trains models and saves relevant artifacts in the `outputs/` directory.
+### Training
+```bash
+# Basic training with default parameters
+python -m src.train
 
-2. **Validation script**
+# Custom training parameters
+IMAGE_SIZE=320 BATCH_SIZE=2 EPOCHS=25 python -m src.train
+```
 
-   - A script that loads the trained model, runs inference on a validation set, writes predicted keypoints into `outputs/output.parquet` (in the same format as `data/dataset.parquet`), and prints a summary score that reflects how accurately the predicted keypoints match the ground truth.
+### Evaluation
+```bash
+# Evaluate on validation set
+python -m src.eval --mode eval --partition val
 
-3. **Model Output Directory**
+# Evaluate on test set
+python -m src.eval --mode eval --partition test
 
-   - All artifacts (e.g. trained model, predictions) should be saved in `/outputs/`.
+# With post-processing
+python -m src.eval --mode eval --partition val --postprocess
+```
 
-4. **README.md**
+### Inference
+```bash
+# Generate predictions and visualizations
+python -m src.eval --mode eval --partition val --save-predictions
+```
 
-   - Setup instructions (environment, dependencies)
-   - How to run training and validation scripts
-   - Brief explanation of your approach
-     - Keep this section high-level and concise — we will review your code directly for details.
+## Approach
 
----
+### Model Architecture
+- Mask R-CNN is ideal for this task as it naturally outputs instance segmentation masks that can be directly converted to polygons, eliminating the need for separate mask-to-polygon post-processing.
+- **Backbone**: Mask R-CNN with ResNet-50 FPN (Feature Pyramid Network)
+- **Components**: 
+  - ResNet-50 backbone for feature extraction
+  - FPN for multi-scale feature representation
+  - Region Proposal Network (RPN) for object detection
+  - Fast R-CNN head for classification and bounding box regression
+  - Mask head for instance segmentation
+- **Pretrained**: COCO weights for transfer learning
+- **Output**: 2 classes (background + roof)
+- **Polygonization**: Contour extraction with vertex constraints
 
-### **What We're Looking For**
+### Loss Functions
+Mask R-CNN uses a multi-task loss combining:
+- **RPN Loss**: Objectness classification + bounding box regression
+- **Fast R-CNN Loss**: Classification + bounding box regression  
+- **Mask Loss**: Binary cross-entropy for pixel-wise segmentation
+- **Total Loss**: L = L_rpn + L_fast_rcnn + L_mask
 
-- A reasonable proof-of-concept level model. Does not need to be state-of-the-art, but needs to convince us your solution is viable to invest more time in.
-- A **reproducible** solution, from environment setup to running training and validation.
-- Clear and modular code structure.
-- Concise and sufficient comments to help others quickly understand your implementation.
+### Training Strategy
+**Designed to solve training instability issues commonly encountered with Mask R-CNN:**
+1. **Transfer Learning**: Start with COCO-pretrained weights to provide stable initialization
+2. **Multi-task Loss**: Classification + bounding box + mask prediction with balanced loss weights
+3. **Optimization**: AdamW with cosine learning rate scheduling to prevent learning rate oscillations and ensure smooth training
+3. **Regularization**: Weight decay and early stopping to prevent overfitting and ensure stable convergence
+5. **Reproducible Training**: Seeds ensure consistent results across training runs
+6. **Checkpoint Saving**: Every 5 epochs preserves progress and enables recovery from training instability
 
----
+### Hardware Used
+- **Device**: CPU (Apple Silicon M4 Pro)
+- **Memory**: Available system RAM
+- **Training Time**: 25 epochs in ~100 mins
+- **Note**: No GPU acceleration used during training
 
-### **What We’re *****Not***** Looking For**
-- Submissions that rely heavily on GPU acceleration or brute-force training to achieve high performance. We prioritize sound model design, clarity of implementation, and reproducibility over raw score or scale of compute used.
+### Evaluation Metrics
+- **IoU**: Intersection over Union for mask quality
+- **AP50**: Average Precision at IoU threshold 0.5
+- **AP@[.50:.95]**: Mean AP across IoU thresholds
+- **AP75**: Average Precision at IoU threshold 0.75
+
+### Post-processing
+- **Polygon Simplification**: Douglas-Peucker algorithm with vertex limits
+- **Overlap Removal**: IoU-based merging of duplicate predictions
+- **Confidence Filtering**: Score threshold for quality control
+
+## Results
+- **IoU**: 0.622
+- **Best AP50**: 0.669 (validation set)
+- **AP@[0.50:0.95]**: 0.422 (mean AP across IoU thresholds)
+- **AP75**: 0.454 (AP at IoU threshold 0.75)
+
+
+## File Descriptions
+
+- **`dataset.py`**: Handles data loading, polygon parsing, and tensor conversion
+- **`model.py`**: Defines Mask R-CNN architecture and loads pretrained weights
+- **`train.py`**: Training loop with scheduling, early stopping, validation and model checkpointing
+- **`eval.py`**: Evaluation, metrics calculation, and visualization
+- **`postprocessing.py`**: Polygon optimization and overlap removal utilities
+
+### Output Structure
+```
+outputs/
+├── maskrcnn_model_best.pt          # Best trained model (AP50=0.669)
+├── output_maskrcnn_val.parquet     # Validation set predictions
+├── output_maskrcnn_test.parquet    # Test set predictions  
+├── val_predictions/                 # Validation image overlays with predicted polygons
+├── test_predictions/                # Test image overlays with predicted polygons
+└── train_improved_320x320_batch2.log # Training logs and metrics
+```
+
+## Challenges and Solutions
+
+### Training Stability and Reproducibility
+I observed unstable training patterns characterized by fluctuating loss curves and inconsistent AP scores across epochs. To address this, I implemented comprehensive seeding (numpy, torch, dataloader workers), learning rate scheduling with cosine annealing, and early stopping on AP50 to prevent overfitting and ensure reproducible results.
+
+### Post-processing Integration
+I identified a need to balance polygon quality improvement with maintaining model performance metrics. The challenge was to reduce visual clutter from overlapping predictions without degrading quantitative performance. I implemented IoU-based polygon merging that reduces overlapping predictions and achieving better visual quality. 
+
+## Future Work
+
+### Data Augmentation
+The current implementation lacks data augmentation, which can reduce model robustness and generalization to unseen roof shapes. Implementing simple geometric transformations such as horizontal/vertical flips, rotations, and brightness adjustments during training would enhance the model's ability to handle diverse roof configurations.
+
+### Boundary-Aware Loss Functions
+The current model sometimes produces overly complex polygons requiring post-processing, indicating that boundary prediction could be improved. To address this, boundary-aware losses (like Boundary IoU) could be implemented during training to encourage cleaner polygon outputs and reduce the need for extensive post-processing.
+
+### Multi-scale Training Strategy
+I observed that AP75 (0.454) is significantly lower than AP50 (0.669), indicating the model struggles with stricter IoU thresholds and precise localization. This suggests the model could benefit from better multi-scale understanding to handle roofs of varying sizes and improve boundary accuracy. Implementing multi-scale training could improve detection across different roof sizes and enhance overall model robustness.
+
+## Conclusion
+
+This project achieves solid performance metrics (AP50: 0.669, mIoU: 0.622) and demonstrates best practices for training, reproducibility, and evaluation. It provides a strong foundation for a production-ready roof segmentation system. The next steps identified can further enhance model performance and deployment readiness.

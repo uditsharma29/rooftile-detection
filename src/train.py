@@ -9,7 +9,7 @@ import numpy as np
 from tqdm import tqdm
 import random
 
-# Set seeds for reproducibility
+# Set seeds for main process (not for dataloader workers)
 def set_seeds(seed=42):
     random.seed(seed)
     np.random.seed(seed)
@@ -18,8 +18,8 @@ def set_seeds(seed=42):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
+# Set seeds for dataloader workers
 def worker_init_fn(worker_id):
-    # Initialize worker with different seed for reproducibility
     random.seed(42 + worker_id)
     np.random.seed(42 + worker_id)
     torch.manual_seed(42 + worker_id)
@@ -47,7 +47,7 @@ def main():
     # Get config from environment variables
     image_size = int(os.getenv('IMAGE_SIZE', 256))
     batch_size = int(os.getenv('BATCH_SIZE', 4))
-    epochs = int(os.getenv('EPOCHS', 25))  # Reduced from 30 to prevent overfitting
+    epochs = int(os.getenv('EPOCHS', 25)) 
     
     # Set evaluation threshold
     os.environ['SCORE_THRESH'] = '0.1'  # Lower threshold for evaluation

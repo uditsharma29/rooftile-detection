@@ -19,6 +19,7 @@ class SimpleRoofDataset(Dataset):
 		return len(self.df)
 
 	def _row_to_polygons(self, row: pd.Series):
+		#Annotations format: annotations → [0] → "objects" → [i] → "keyPoints" → [0] → "points”
 		# Extract polygon coordinates from annotation row
 		polys = []
 		ann = row.get("annotations")
@@ -46,6 +47,7 @@ class SimpleRoofDataset(Dataset):
 				if pts is None:
 					continue
 				norm = [{"x": float(p.get("x") or 0.0), "y": float(p.get("y") or 0.0)} for p in pts]
+				#Filter out polygons with less than 3 vertices (Not enough points to form a polygon)
 				if len(norm) >= 3:
 					polys.append(norm)
 		return polys
@@ -65,7 +67,7 @@ class SimpleRoofDataset(Dataset):
 		instance_masks = []
 		boxes = []
 		for pts in self._row_to_polygons(row):
-			# Scale coordinates to image size and create mask
+			# Scale coordinates to image size and create mask (mask is a binary image where 1 is the polygon and 0 is the background)
 			xy = [(p["x"] * self.image_size, p["y"] * self.image_size) for p in pts]
 			mask_img = Image.new("L", (self.image_size, self.image_size), 0)
 			ImageDraw.Draw(mask_img).polygon(xy, fill=1)
@@ -90,6 +92,7 @@ class SimpleRoofDataset(Dataset):
 		
 		# Create labels tensor and normalize image
 		labels_t = torch.ones((n,), dtype=torch.int64) if n > 0 else torch.empty((0,), dtype=torch.int64)
+		#Normalize image to 0-1 and convert to tensor
 		image_t = torch.from_numpy(np.array(img)).permute(2, 0, 1).float() / 255.0
 		
 		# Return image, target dict, and metadata
